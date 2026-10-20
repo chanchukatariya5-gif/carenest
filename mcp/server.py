@@ -1,7 +1,6 @@
-
+import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
-import sqlite3
 
 from mcp.server.fastmcp import FastMCP
 
@@ -92,6 +91,7 @@ def get_welcome_message() -> str:
 
 # APPOINTMENTS
 
+
 @mcp.tool()
 def create_appointment(
     title: str,
@@ -175,6 +175,7 @@ def cancel_appointment(appointment_id: int) -> dict:
 
 # CARE NOTES AND QUESTIONS
 
+
 @mcp.tool()
 def save_care_note(note: str) -> dict:
     """Save a general care note for later reference."""
@@ -193,9 +194,7 @@ def save_care_note(note: str) -> dict:
 def get_care_notes() -> dict:
     """Retrieve saved care notes in newest-first order."""
     with connect_db() as conn:
-        rows = conn.execute(
-            "SELECT * FROM care_notes ORDER BY id DESC"
-        ).fetchall()
+        rows = conn.execute("SELECT * FROM care_notes ORDER BY id DESC").fetchall()
 
     return {"success": True, "notes": [dict(r) for r in rows]}
 
@@ -218,14 +217,13 @@ def save_question(question: str) -> dict:
 def get_questions() -> dict:
     """List questions saved for a future care appointment."""
     with connect_db() as conn:
-        rows = conn.execute(
-            "SELECT * FROM questions ORDER BY id DESC"
-        ).fetchall()
+        rows = conn.execute("SELECT * FROM questions ORDER BY id DESC").fetchall()
 
     return {"success": True, "questions": [dict(r) for r in rows]}
 
 
 # REMINDERS
+
 
 @mcp.tool()
 def create_reminder(title: str, due_at: str) -> dict:
@@ -260,9 +258,7 @@ def get_reminders(include_completed: bool = False) -> dict:
     """List reminders that still need attention, or include completed ones."""
     with connect_db() as conn:
         if include_completed:
-            rows = conn.execute(
-                "SELECT * FROM reminders ORDER BY due_at"
-            ).fetchall()
+            rows = conn.execute("SELECT * FROM reminders ORDER BY due_at").fetchall()
         else:
             rows = conn.execute(
                 """SELECT * FROM reminders
@@ -287,6 +283,7 @@ def complete_reminder(reminder_id: int) -> dict:
 
 
 # CHECKLISTS
+
 
 @mcp.tool()
 def create_checklist(title: str, items: list[str]) -> dict:
